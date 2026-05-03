@@ -1,0 +1,41 @@
+<%- include("partials/head", { title: "My Tasks" }) %>
+<%- include("partials/nav", { user }) %>
+
+<main class="container">
+  <div class="page-title">
+    <h1>My Tasks</h1>
+    <p class="muted">Tasks assigned to you</p>
+  </div>
+
+  <section class="card">
+    <% if (!tasks.length) { %>
+      <p class="muted">No tasks assigned yet.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Due</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr>
+              <td>
+                <strong><%= task.title %></strong>
+                <div class="muted"><%= task.description || "" %></div>
+              </td>
+              <td><%= task.project_name %></td>
+              <td><span class="badge <%= task.status %>"><%= task.status.replace("_", " ") %></span></td>
+              <td><%= task.due_date || "-" %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+</main>
+
+<%- include("partials/foot") %>

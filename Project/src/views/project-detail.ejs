@@ -1,0 +1,115 @@
+<%- include("partials/head", { title: project.name }) %>
+<%- include("partials/nav", { user }) %>
+
+<main class="container">
+  <div class="page-title">
+    <div>
+      <h1><%= project.name %></h1>
+      <p class="muted"><%= project.description || "No description" %></p>
+    </div>
+    <% if (user.role === "Admin") { %>
+      <form method="post" action="/projects/<%= project.id %>/delete" data-confirm="Delete this project?" class="inline">
+        <button type="submit" class="danger">Delete Project</button>
+      </form>
+    <% } %>
+  </div>
+
+  <section class="card">
+    <h2>Members</h2>
+    <ul class="member-list">
+      <% members.forEach(member => { %>
+        <li>
+          <strong><%= member.name %></strong>
+          <span class="muted"><%= member.email %></span>
+          <span class="badge <%= member.role === "Admin" ? "admin" : "member" %>"><%= member.role %></span>
+        </li>
+      <% }) %>
+    </ul>
+
+    <% if (user.role === "Admin") { %>
+      <form method="post" action="/projects/<%= project.id %>/members" class="form-inline">
+        <label>
+          Add member by email
+          <input type="email" name="email" placeholder="member@example.com" required>
+        </label>
+        <button type="submit">Add</button>
+      </form>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Create Task</h2>
+    <form method="post" action="/projects/<%= project.id %>/tasks" class="form-grid">
+      <label>
+        Title
+        <input type="text" name="title" required>
+      </label>
+      <label>
+        Description
+        <input type="text" name="description" placeholder="Optional">
+      </label>
+      <label>
+        Due date
+        <input type="date" name="due_date">
+      </label>
+      <label>
+        Assign to
+        <select name="assignee_id">
+          <% members.forEach(member => { %>
+            <option value="<%= member.id %>"><%= member.name %> (<%= member.role %>)</option>
+          <% }) %>
+        </select>
+      </label>
+      <button type="submit">Create Task</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Tasks</h2>
+    <% if (!tasks.length) { %>
+      <p class="muted">No tasks yet.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th>Due</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr>
+              <td>
+                <strong><%= task.title %></strong>
+                <div class="muted"><%= task.description || "" %></div>
+              </td>
+              <td><%= task.assignee_name || "Unassigned" %></td>
+              <td><span class="badge <%= task.status %>"><%= task.status.replace("_", " ") %></span></td>
+              <td><%= task.due_date || "-" %></td>
+              <td class="actions">
+                <form method="post" action="/tasks/<%= task.id %>/status" class="inline">
+                  <select name="status">
+                    <option value="todo" <%= task.status === "todo" ? "selected" : "" %>>todo</option>
+                    <option value="in_progress" <%= task.status === "in_progress" ? "selected" : "" %>>in progress</option>
+                    <option value="done" <%= task.status === "done" ? "selected" : "" %>>done</option>
+                  </select>
+                  <button type="submit">Update</button>
+                </form>
+                <% if (user.role === "Admin") { %>
+                  <form method="post" action="/tasks/<%= task.id %>/delete" data-confirm="Delete this task?" class="inline">
+                    <button type="submit" class="danger">Delete</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+</main>
+
+<%- include("partials/foot") %>

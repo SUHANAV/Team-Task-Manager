@@ -1,0 +1,35 @@
+<%- include("partials/head", { title: "Sign Up" }) %>
+<%- include("partials/nav", { user }) %>
+
+<main class="container">
+  <h1>Create Account</h1>
+  <p class="muted">Choose the role you want for this account.</p>
+  <% if (error) { %>
+    <p class="alert"><%= error %></p>
+  <% } %>
+  <form method="post" action="/auth/signup" class="card form-grid">
+    <label>
+      Name
+      <input type="text" name="name" required>
+    </label>
+    <label>
+      Email
+      <input type="email" name="email" required>
+    </label>
+    <label>
+      Password
+      <input type="password" name="password" required>
+    </label>
+    <label>
+      Role
+      <select name="role" required>
+        <option value="Member">Member</option>
+        <option value="Admin">Admin</option>
+      </select>
+    </label>
+    <button type="submit">Create Account</button>
+  </form>
+  <p class="muted">Already have an account? <a href="/login">Login</a></p>
+</main>
+
+<%- include("partials/foot") %>

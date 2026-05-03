@@ -1,0 +1,67 @@
+<%- include("partials/head", { title: "Dashboard" }) %>
+<%- include("partials/nav", { user }) %>
+
+<main class="container">
+  <div class="page-title">
+    <h1>Dashboard</h1>
+    <p class="muted">Welcome back, <%= user.name %></p>
+  </div>
+
+  <section class="stats">
+    <% const totalCount = summary?.totalCount ?? 0; %>
+    <% const todoCount = summary?.todoCount ?? 0; %>
+    <% const inProgressCount = summary?.inProgressCount ?? 0; %>
+    <% const doneCount = summary?.doneCount ?? 0; %>
+    <% const overdueCount = summary?.overdueCount ?? 0; %>
+    <div class="stat-card">
+      <span>Total</span>
+      <strong><%= totalCount %></strong>
+    </div>
+    <div class="stat-card">
+      <span>To do</span>
+      <strong><%= todoCount %></strong>
+    </div>
+    <div class="stat-card">
+      <span>In progress</span>
+      <strong><%= inProgressCount %></strong>
+    </div>
+    <div class="stat-card">
+      <span>Done</span>
+      <strong><%= doneCount %></strong>
+    </div>
+    <div class="stat-card accent">
+      <span>Overdue</span>
+      <strong><%= overdueCount %></strong>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>My Upcoming Tasks</h2>
+    <% if (!tasks.length) { %>
+      <p class="muted">No tasks assigned yet.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Due</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr>
+              <td><%= task.title %></td>
+              <td><%= task.project_name %></td>
+              <td><span class="badge <%= task.status %>"><%= task.status.replace("_", " ") %></span></td>
+              <td><%= task.due_date || "-" %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </section>
+</main>
+
+<%- include("partials/foot") %>

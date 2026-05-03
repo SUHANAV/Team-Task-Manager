@@ -1,0 +1,44 @@
+<%- include("partials/head", { title: "Projects" }) %>
+<%- include("partials/nav", { user }) %>
+
+<main class="container">
+  <div class="page-title">
+    <h1>Projects</h1>
+    <p class="muted">Projects you belong to</p>
+  </div>
+
+  <% if (user.role === "Admin") { %>
+    <section class="card form-grid">
+      <h2>Create Project</h2>
+      <form method="post" action="/projects">
+        <label>
+          Name
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Description
+          <input type="text" name="description" placeholder="Optional">
+        </label>
+        <button type="submit">Create</button>
+      </form>
+    </section>
+  <% } %>
+
+  <section class="card">
+    <h2>Project List</h2>
+    <% if (!projects.length) { %>
+      <p class="muted">No projects yet.</p>
+    <% } else { %>
+      <div class="project-grid">
+        <% projects.forEach(project => { %>
+          <a class="project-card" href="/projects/<%= project.id %>">
+            <h3><%= project.name %></h3>
+            <p><%= project.description || "No description" %></p>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<%- include("partials/foot") %>

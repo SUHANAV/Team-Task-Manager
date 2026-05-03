@@ -1,0 +1,16 @@
+<header class="site-header">
+  <div class="brand">Team Task Manager</div>
+  <nav>
+    <% if (user) { %>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">Projects</a>
+      <a href="/tasks">My Tasks</a>
+      <form method="post" action="/auth/logout" class="inline">
+        <button class="link" type="submit">Logout</button>
+      </form>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/signup">Sign Up</a>
+    <% } %>
+  </nav>
+</header>
